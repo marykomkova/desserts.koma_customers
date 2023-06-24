@@ -1,0 +1,324 @@
+@model Пользователи
+<title>Desserts.koma | Оформление заказа</title>
+
+<link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
+
+<link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
+<link rel="stylesheet" href="~/css/animate.css">
+
+<link rel="stylesheet" href="~/css/owl.carousel.min.css">
+<link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+<link rel="stylesheet" href="~/css/magnific-popup.css">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="~/css/aos.css">
+
+<link rel="stylesheet" href="~/css/ionicons.min.css">
+
+<link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="~/css/jquery.timepicker.css">
+
+
+<link rel="stylesheet" href="~/css/flaticon.css">
+<link rel="stylesheet" href="~/css/icomoon.css">
+<link rel="stylesheet" href="~/css/basket.css">
+<link rel="stylesheet" href="~/css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+
+<style>
+
+    .overl {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный цвет */
+        z-index: 999; /* Определяет порядок наложения элементов */
+    }
+
+    #mySidenav {
+        z-index: 1000;
+    }
+
+    .row {
+        height: 10% !important;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+
+        $(window).scroll(function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 400) {
+                $(".navbar").addClass("navbar-fixed-top dark-bar");
+            } else {
+                $(".navbar").removeClass("navbar-fixed-top dark-bar");
+            }
+        });
+
+        // Menu bar
+        $(".menu").click(function () {
+            $(this).toggleClass('m c');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main').append('<div class="overl"></div>');
+            document.body.style.overflow = 'hidden';
+        });
+
+        $("#mySidenav .closebtn").click(function () {
+            $('.menu').toggleClass('c m');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main .overl').remove();
+            document.body.style.overflow = 'auto';
+        });
+
+
+    });
+
+    function logout() {
+        $.ajax({
+            url: "/Home/Logout",
+            type: "POST",
+            success: function (result) {
+                if (result) {
+                    $(".result").html(result);
+                    window.location.href = `Home/Index`;
+                }
+            }
+        });
+    }
+
+    function setCost() {
+
+        fetch('/Home/GetBasketCost')
+            .then(response => response.json())
+            .then(data => {
+                $('#cost').text(data.cost + ' руб.');
+                if (data.discount != 0) {
+                    $('#sale').text(data.cost * data.discount / 100 + ' руб.');
+                    $('#totCost').text(data.cost - (data.cost * data.discount / 100) + ' руб.');
+                } else {
+                    $('#totCost').text(data.cost + ' руб.');
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
+    $(document).ready(function () {
+        $('#phone').inputmask({ mask: '+375 (99) 999-99-99' });
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        setCost();
+
+        $(function () {
+            $('#date').datepicker({
+                minDate: '+3d', // Минимальная дата - текущая дата + 3 дня
+                defaultDate: new Date(new Date().getTime() + (3 * 24 * 60 * 60 * 1000)), // Начальная дата - текущая дата + 3 дня
+                dateFormat: 'yy-mm-dd', // Формат даты
+            });
+            $('#date').text(new Date(new Date().getTime() + (3 * 24 * 60 * 60 * 1000)));
+        });
+
+        document.getElementById("send").addEventListener("click", function () {
+            var inputDate = $('#date').val();
+            var dateObject = new Date(inputDate);
+            if (dateObject.toString() != "Invalid Date" && !$('#phone').val().endsWith('_')) {
+                $.ajax({
+                    url: "/Home/Checkout",
+                    type: "POST",
+                    data: {
+                        date: $('#date').val().toString(),
+                        phone: $('#phone').val().toString(),
+                        cost: +$('#cost').text().replace(' руб.', '')
+                    },
+                    success: function () {
+                        window.location.href = "Basket";
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+            } else {
+                alert('Неверные данные');
+            }
+        });
+
+    });
+</script>
+
+<div id="mySidenav" class="sidenav hide-menu">
+    <a href="javascript:void(0)" class="closebtn">×</a>
+    <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+    <a id="desertss" asp-area="" asp-controller="Home" asp-action="Desserts">Десерты</a>
+    <a asp-area="" asp-controller="Home" asp-action="Basket">Корзина</a>
+    <a asp-area="" asp-controller="Home" asp-action="Account">Аккаунт</a>
+
+    <div class="exit">
+        <a href="#" id="exet_acc" onclick="logout()">Выйти</a>
+    </div>
+</div>
+<div class="main null_shadow" id="main">
+    <header class="bg-img header">
+        <nav class="navbar navbar-default navbar-vira">
+            <div class="container hei">
+                <div class="navigation-bar">
+                    <div class="row">
+                        <div id="cr" class="col-xs-6">
+                            <div class="menu m">
+                                <a href="#"><span class="ion-navicon _ion-android-menu"></span></a>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <div class="logo">
+                                <img src="/icons/white_logo.svg" alt="Логотип">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="intro-box">
+                    <div class="intro">
+                        <p id="head-title">Оформление заказа</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-xl-8 ftco-animate">
+                    <form action="#" id="form" class="billing-form bg-light p-3 p-md-5">
+                        <h3 class="mb-4 billing-heading">Детали</h3>
+                        <div class="row align-items-end">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label label for="date">Дата выдачи</label>
+                                    <input id="date" name="date" type="text" class="form-control" placeholder="" required>
+                                </div>
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="way">Способ получения</label>
+                                    <div class="select-wrap">
+                                        <div class="icon"><span class="ion-ios-arrow-down"></span></div>
+                                        <select name="" id="deliv" class="form-control" required>
+                                            <option selected disabled value="nothing">Выберите способ получения</option>
+                                            <option value="myself">Самовывоз</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="w-100"></div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="phone">Номер телефона</label>
+                                    @if (Model.НомерТелефона != null)
+                                    {
+                        <input id="phone" type="text" class="form-control" value="@Model.НомерТелефона" placeholder="" required> }
+                    else
+                    {
+        <input id="phone" type="text" class="form-control" placeholder="" required>}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row mt-5 pt-3 d-flex">
+                        <div class="col-md-6 d-flex">
+                            <div class="cart-detail cart-total bg-light p-3 p-md-4">
+                                <h3 class="billing-heading mb-4">Итоговый чек</h3>
+                                <p class="d-flex">
+                                    <span>Стоимость</span>
+                                    <span id="cost">0 руб.</span>
+                                </p>
+                                <p class="d-flex">
+                                    <span>Скидка</span>
+                                    <span id="sale">0 руб.</span>
+                                </p>
+                                <hr>
+                                <p class="d-flex total-price">
+                                    <span>Итого</span>
+                                    <span id="totCost">0 руб.</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cart-detail bg-light p-3 p-md-4">
+                                <h3 class="billing-heading mb-4">Обработка заявки</h3>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="checkbox">
+                                            <label>
+                                                После отправки данной заявки вам перезвонят в течение
+                                                получаса
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p><button id="send" class="btn btn-primary py-3 px-4">Отправить заявку</button></p>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- .col-md-8 -->
+            </div>
+        </div>
+    </section> <!-- .section -->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p> Создано с <span class="fa fa-heart"></span> <a href="https://www.instagram.com/desserts.koma/">Desserts.koma</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+@*<div id="demo-modal" class="modal">
+        <div class="modal__content">
+            <h1>Сообщение</h1>
+
+            <p>
+                Заказ успешно отправлен!
+                Вам перезвонят в течение получаса!
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="index.html" class="modal__close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-fail" class="modal">
+        <div class="modal__content">
+            <h1>Ошибка</h1>
+
+            <p>
+                Что-то пошло не так! Повторите операцию.
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="index.html" class="modal__close">&times;</a>
+        </div>
+    </div>*@

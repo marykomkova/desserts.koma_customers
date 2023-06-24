@@ -1,0 +1,683 @@
+@model MyViewModel
+<title>Desserts.koma | Десерты</title>
+
+<link href="~/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/css/bootstrap-theme.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/animate.css">
+
+<link rel="stylesheet" href="~/css/owl.carousel.min.css">
+<link href="~/css/owl.theme.default.min.css" rel="stylesheet">
+
+<link href="~/css/magnific-popup.css" rel="stylesheet">
+
+<link href="~/css/ionicons.min.css" rel="stylesheet">
+<link href="~/css/style.css" rel="stylesheet">
+<link href="~/css/style4.css" rel="stylesheet">
+<link rel="stylesheet" href="~/vendors/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="~/vendors/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="~/vendors/themify-icons/themify-icons.css">
+<link rel="stylesheet" href="~/vendors/linericon/style.css">
+<link rel="stylesheet" href="~/vendors/owl-carousel/owl.theme.default.min.css">
+<link rel="stylesheet" href="~/vendors/owl-carousel/owl.carousel.min.css">
+<link rel="stylesheet" href="~/vendors/nice-select/nice-select.css">
+<link rel="stylesheet" href="~/vendors/nouislider/nouislider.min.css">
+<link rel="stylesheet" href="~/css/visibleOrNot.css">
+<link rel="stylesheet" href="~/css/icomoon.css">
+<link rel="stylesheet" href="~/css/flaticon.css">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+<script src="wow.min.js"></script>
+@*<script>
+        new WOW().init();
+    </script>*@
+
+<script src="~/vendors/jquery/jquery-3.2.1.min.js"></script>
+<script src="~/vendors/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="~/vendors/skrollr.min.js"></script>
+<script src="~/vendors/owl-carousel/owl.carousel.min.js"></script>
+<script src="~/vendors/nice-select/jquery.nice-select.min.js"></script>
+<script src="~/vendors/nouislider/nouislider.min.js"></script>
+<script src="~/vendors/jquery.ajaxchimp.min.js"></script>
+<script src="~/vendors/mail-script.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/owl.carousel.min.js"></script>
+<script src="https://use.fontawesome.com/55b73bf748.js"></script>
+<script src="~/js/jquery.magnific-popup.js"></script>
+<script src="~/js/jquery.waypoints.min.js"></script>
+<script src="~/js/jquery.magnific-popup.min.js"></script>
+<script src="~/js/jquery.animateNumber.min.js"></script>
+<script src="~/js/jquery.easing.1.3.js"></script>
+<script src="~/js/desserts.js"></script>
+
+@{
+    var dessertsData = Model.DessertsModel;
+}
+
+<style>
+    .overl {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный цвет */
+        z-index: 999; /* Определяет порядок наложения элементов */
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+
+        $(window).scroll(function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 575) {
+                $(".navbar").addClass("navbar-fixed-top dark-bar");
+            } else {
+                $(".navbar").removeClass("navbar-fixed-top dark-bar");
+            }
+        });
+
+        // Menu bar
+        $(".menu").click(function () {
+            $(this).toggleClass('m c');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main').append('<div class="overl"></div>');
+            document.body.style.overflow = 'hidden';
+        });
+
+        $("#mySidenav .closebtn").click(function () {
+            $('.menu').toggleClass('c m');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main .overl').remove();
+            document.body.style.overflow = 'auto';
+        });
+
+        $('a[href*="#"]:not([href="#"])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '')
+                || location.hostname == this.hostname) {
+
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').animate({
+                        scrollTop: (target.offset().top - 530)
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+
+
+        var contentWayPoint = function () {
+            var i = 0;
+            $('.ftco-animate').waypoint(function (direction) {
+
+                if (direction === 'down' && !$(this.element).hasClass('ftco-animated')) {
+
+                    i++;
+
+                    $(this.element).addClass('item-animate');
+                    setTimeout(function () {
+
+                        $('body .ftco-animate.item-animate').each(function (k) {
+                            var el = $(this);
+                            setTimeout(function () {
+                                var effect = el.data('animate-effect');
+                                if (effect === 'fadeIn') {
+                                    el.addClass('fadeIn ftco-animated');
+                                } else if (effect === 'fadeInLeft') {
+                                    el.addClass('fadeInLeft ftco-animated');
+                                } else if (effect === 'fadeInRight') {
+                                    el.addClass('fadeInRight ftco-animated');
+                                } else {
+                                    el.addClass('fadeInUp ftco-animated');
+                                }
+                                el.removeClass('item-animate');
+                            }, k * 50, 'easeInOutExpo');
+                        });
+
+                    }, 100);
+
+                }
+
+            }, { offset: '95%' });
+        };
+        contentWayPoint();
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let isUs;
+        fetch('/Home/GetIsUser')
+            .then(response => response.text())
+            .then(data => {
+                isUs = data;
+                if (isUs == "true") {
+                    const b = document.createElement('a');
+                    b.id = "basket";
+                    b.href = "/Home/Basket";
+                    b.innerText = `Корзина`;
+                    document.getElementById(`mySidenav`).append(b);
+
+                    const b2 = document.createElement('a');
+                    b2.id = "account";
+                    b2.href = "/Home/Account";
+                    b2.innerText = `Аккаунт`;
+                    document.getElementById(`mySidenav`).append(b2);
+
+                    let isEmp = "";
+                    fetch('/Home/GetIsEmployee')
+                        .then(response => response.text())
+                        .then(data => {
+                            isEmp = data;
+                            if (isEmp == "true") {
+                                const e = document.createElement('a');
+                                e.id = "admin";
+                                e.href = "admin.html";
+                                e.innerText = `Администратор`;
+                                document.getElementById(`mySidenav`).append(e);
+                            }
+                            const v = document.createElement('div');
+                            v.classList.add("exit");
+                            v.innerHTML = `<a href="#" id="exet_acc" onclick="logout()">Выйти</a>`;
+                            document.getElementById(`mySidenav`).append(v);
+                        })
+                        .catch(error => console.error(error));
+                } else {
+                    const v = document.createElement('a');
+                    v.id = "enter";
+                    v.href = '/Home/Login';
+                    v.innerText = 'Вход';
+                    document.getElementById(`mySidenav`).append(v);
+                }
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+
+<script>
+
+    function filterDesserts(type) {
+        var cards = $('#sec .col-md-6.col-lg-4');
+        if (type == "Все типы") {
+            for (var i = 0; i < cards.length; i++) {
+                var card = cards[i];
+                card.style.display = 'block';
+            }
+        } else {
+            for (var i = 0; i < cards.length; i++) {
+                var card = cards[i];
+                var cardType = $(card).find('.tip').text().trim();
+                if (cardType === type) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            }
+        }
+    }
+
+    function filterPrice(min, max) {
+        var cards = $('#sec .col-md-6.col-lg-4');
+        var matchingCards = $();
+
+        for (var i = 0; i < cards.length; i++) {
+            var card = cards[i];
+            var cardPrice = +$(card).find('.card-product__price').text().replace(" руб.", "");
+            if (cardPrice >= min && cardPrice <= max) {
+                matchingCards = matchingCards.add(card);
+            }
+        }
+
+        var notMatchingCards = cards.not(matchingCards);
+
+        let count = cards.length / 3 + cards.length % 3;
+
+        for (var i = 1; i <= count; i++) {
+
+            $(`#sec #row_${i}`).empty();
+        }
+
+        for (var i = 0, j = 0, k = 0; i < cards.length; i++) {
+            if (i + 1 % 3 == 1) {
+                j += 1;
+            }
+
+            if (i < matchingCards.length) {
+                $(`#sec #row_${j}`).append($(matchingCards[i]).prop('outerHTML'));
+            } else {
+                $(`#sec #row_${j}`).append($(notMatchingCards[k]).prop('outerHTML'));
+                k++;
+            }
+
+        }
+
+        cards = $('#sec .col-md-6.col-lg-4');
+
+        for (var i = 0; i < cards.length; i++) {
+            var card = cards[i];
+            var cardPrice = +$(card).find('.card-product__price').text().replace(" руб.", "");
+
+            if (cardPrice >= min && cardPrice <= max) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        }
+
+
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+
+        $('#sort').on('change', function () {
+            var value = $(this).val();
+            var items = $('#sec .col-md-6.col-lg-4');
+
+            if (value == 'rise') {
+                items.sort(function (a, b) {
+                    return parseFloat($(a).find('.card-product__price').text().replace(" руб.", "")) - parseFloat($(b).find('.card-product__price').text().replace(" руб.", ""));
+                });
+            } else if (value == 'down') {
+                items.sort(function (a, b) {
+                    return parseFloat($(b).find('.card-product__price').text().replace(" руб.", "")) - parseFloat($(a).find('.card-product__price').text().replace(" руб.", ""));
+                });
+            } else if (value == 'name') {
+                items.sort(function (a, b) {
+                    var aName = $(a).find('.card-product__title p').text().toUpperCase();
+                    var bName = $(b).find('.card-product__title p').text().toUpperCase();
+                    return (aName < bName) ? -1 : (aName > bName) ? 1 : 0;
+                });
+            }
+
+            console.log(items);
+
+            let count = items.length / 3 + items.length % 3;
+
+            for (var i = 1; i <= count; i++) {
+
+                $(`#sec #row_${i}`).empty();
+            }
+
+            for (var i = 0, j = 0; i < items.length; i++) {
+                if (i + 1 % 3 == 1) {
+                    j += 1;
+                }
+                $(`#sec #row_${j}`).append($(items[i]).prop('outerHTML'));
+            }
+        });
+
+
+        $('#sort2').on('change', function () {
+            var cards = $('#sec .col-md-6.col-lg-4');
+            const value = this.value;
+
+            for (var i = 0; i < cards.length; i++) {
+
+                if (value === "all" || i < +value) {
+                    cards[i].style.display = "block";
+                } else {
+                    cards[i].style.display = "none";
+                }
+            }
+        });
+
+        var radioButtons = document.querySelectorAll('input[type="radio"]');
+        for (var i = 0; i < radioButtons.length; i++) {
+            var radioButton = radioButtons[i];
+            radioButton.addEventListener('change', function (event) {
+                var type = event.target.nextElementSibling.textContent.trim().replace(/\s*\((\d+)\)/, "");
+                filterDesserts(type);
+            });
+        }
+
+        const lowerValue = document.getElementById("lower-value");
+        const upperValue = document.getElementById("upper-value");
+
+        var nonLinearSlider = document.getElementById('price-range');
+
+        nonLinearSlider.noUiSlider.on('update', function () {
+            filterPrice(lowerValue.innerText.replace(" руб.", ""), upperValue.innerText.replace(" руб.", ""));
+        });
+
+        $('#search_but').click(function () {
+            var searchText = $('#search_inp').val();
+            $('#sec .col-md-6.col-lg-4').each(function () {
+                if ($(this).find('.card-product__title p').text().toLowerCase().indexOf(searchText.toLowerCase()) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+            });
+        });
+
+    });
+</script>
+
+
+<div id="mySidenav" class="sidenav hide-menu">
+    <a href="javascript:void(0)" class="closebtn">×</a>
+    <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+</div>
+<div class="main" id="main">
+    <div class="overlay"></div>
+    <header class="bg-img notbg header">
+        <nav class="pos navbar navbar-default navbar-vira">
+            <div class="container">
+                <div class="navigation-bar">
+                    <div class="row">
+                        <div id="cr" class="col-xs-6">
+                            <div class="menu m">
+                                <a href="#"><span class="ion-navicon _ion-android-menu"></span></a>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <div class="logo">
+                                <img src="/icons/white_logo.svg" alt="Логотип">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="intro-box">
+                    <div class="intro">
+                        <h1>Desserts.koma</h1>
+                        <p>- Выбери свой десерт -</p>
+                        <a class="btn vira-btn" href="#aboutus">К десертам</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section class="section-margin--small mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-3 col-lg-4 col-md-5">
+                    <div class="sidebar-categories">
+                        <div class="head">Типы десертов</div>
+                        <ul class="main-categories">
+                            <li class="common-filter">
+                                <form action="#">
+                                    <ul id="filtr1">
+                                        <li class="filter-list"><input class="pixel-radio" type="radio" id="all_types" name="type"><label for="all_types">Все типы<span id="all"> (@Model.AllDessertsCount)</span></label></li>
+                                        @for (var i = 0; i < Model.TypesModel.Count; i++)
+                                        {
+                                            <li class="filter-list"><input class="pixel-radio" type="radio" id="@Model.TypesModel[i].Номер" name="type"><label for="@Model.TypesModel[i].Номер">@Model.TypesModel[i].Название<span id="num_@Model.TypesModel[i].Номер"> (@Model.TypesCountsModel[i])</span></label></li>
+                                        }
+                                    </ul>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="sidebar-filter">
+                        <div class="top-filter-head">Фильтр</div>
+                        <div class="common-filter">
+                            <div class="head">Стоимость</div>
+                            <div class="price-range-area">
+                                <div id="price-range"></div>
+                                <div class="value-wrapper d-flex">
+                                    <div class="price">Стоимость:</div>
+                                    <div id="lower-value"></div>
+                                    <span>@Model.MinCostModel руб.</span>
+                                    <div class="to">до</div>
+                                    <div id="upper-value"></div>
+                                    <span>@Model.MaxCostModel руб.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-9 col-lg-8 col-md-7">
+                    <!-- Start Filter Bar -->
+                    <div class="filter-bar d-flex flex-wrap align-items-center">
+                        <div class="sorting" id="sorting1">
+                            <select id="sort">
+                                <option disabled selected>Выберите сортировку</option>
+                                <option value="rise">По возрастанию цены</option>
+                                <option value="down">По убыванию цены</option>
+                                <option value="name">По названию</option>
+                            </select>
+                        </div>
+                        <div class="sorting mr-auto" id="sorting2">
+                            <select id="sort2">
+                                <option disabled selected>Количество отображаемых</option>
+                                <option value="12">Отобразить 12</option>
+                                <option value="24">Отобразить 24</option>
+                                <option value="all">Отобразить все</option>
+                            </select>
+                        </div>
+                        <div>
+                            <div class="input-group filter-bar-search">
+                                <input id="search_inp" type="text" placeholder="Поиск">
+                                <div class="input-group-append">
+                                    <button id="search_but" type="button"><i class="ti-search"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a name="aboutus"></a>
+                    <section id="sec" class="lattest-product-area pb-40 category-list">
+                        @for (int i = 0, j = 1; i < Model.DessertsModel.Count; j++)
+                        {
+                            if (i + 1 == Model.DessertsModel.Count)
+                            {
+                                <div class="row" id="row_@j">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i].Номер">@Model.DessertsModel[i].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                break;
+                            }
+                            else if (i + 2 == Model.DessertsModel.Count)
+                            {
+                                <div class="row" id="row_@j">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i].Номер">@Model.DessertsModel[i].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i+1].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i+1].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i + 1].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i+1].Номер">@Model.DessertsModel[i + 1].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i + 1].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                break;
+                            }
+                            else if (i + 3 == Model.DessertsModel.Count)
+                            {
+                                <div class="row" id="row_@j">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i].Номер">@Model.DessertsModel[i].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i+1].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i+1].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i + 1].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i+1].Номер">@Model.DessertsModel[i + 1].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i + 1].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i+2].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i+2].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i + 2].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i+2].Номер">@Model.DessertsModel[i + 2].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i + 2].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                break;
+                            }
+                            else
+                            {
+                                <div class="row" id="row_@j">
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i].Номер">@Model.DessertsModel[i].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i+1].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i+1].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i + 1].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i+1].Номер">@Model.DessertsModel[i + 1].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i + 1].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 col-lg-4">
+                                        <div class="card text-center card-product">
+                                            <div class="card-product__img">
+                                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = Model.DessertsModel[i+2].ИзображениеNavigation.Номер })" weight="255px" height="165" alt="">
+                                                <ul class="card-product__imgOverlay">
+                                                    <li><button data-id="@Model.DessertsModel[i+2].Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                                </ul>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="tip">@Model.DessertsModel[i + 2].ТипNavigation.Название</p>
+                                                <h4 class="card-product__title"><p data-id="dess_@Model.DessertsModel[i+2].Номер">@Model.DessertsModel[i + 2].Название</p></h4>
+                                                <p class="card-product__price">@Model.DessertsModel[i + 2].Стоимость руб.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                i += 3;
+                            }
+                        }
+
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    @*<div id="demo-modal-fail" class="modal">
+            <div class="modal__content">
+                <h1>Ошибка</h1>
+
+                <p>
+                    Что-то пошло не так! Повторите операцию.
+                </p>
+
+                <div class="modal__footer">
+                    Made with <i class="fa fa-heart"></i>, by desserts.koma
+                </div>
+
+                <a href="admin.html" class="modal__close">&times;</a>
+            </div>
+        </div>*@
+
+    @*<div id="demo-modal" class="modal">
+            <div class="modal__content">
+                <h1>Сообщение</h1>
+
+                <p>
+                    Операция успешно выполнена!
+                </p>
+
+                <div class="modal__footer">
+                    Made with <i class="fa fa-heart"></i>, by @desserts.koma
+                </div>
+
+                <a href="admin.html" class="modal__close">&times;</a>
+            </div>
+        </div>*@
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p> Создано с <span class="fa fa-heart"></span> <a href="http://themewagon.com/">Desserts.koma</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

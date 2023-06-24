@@ -1,0 +1,804 @@
+﻿@model OrdersViewModel
+<title>DessertsKoma | Аккаунт</title>
+<link rel="stylesheet" href="~/css/nicepage.css" media="screen">
+<link rel="stylesheet" href="~/css/account.css" media="screen">
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+<link href="/css/basket.css" rel="stylesheet">
+<script class="u-script" type="text/javascript" src="~/js/jq.js" defer=""></script>
+<script class="u-script" type="text/javascript" src="~/js/nicepage.js" defer=""></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="~/vendors/jquery/jquery-3.2.1.min.js"></script>
+<script src="~/vendors/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.5/waypoints.min.js"></script>
+<link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i|Open+Sans:300,300i,400,400i,500,500i,600,600i,700,700i,800,800i">
+<link id="u-page-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|PT+Sans:400,400i,700,700i">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+
+
+@{
+    var userImage = Model.UserModel.ИзображениеNavigation.Номер;
+}
+
+<style>
+    #secr {
+        display: none;
+    }
+    .pad {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+
+    body {
+        background-color: white !important;
+    }
+
+    h2 {
+        color: #f8f8f8 !important;
+    }
+
+    h3, h5, h6 {
+        text-transform: none;
+    }
+
+    .srift {
+        font-family: 'Open Sans',sans-serif !important;
+        font-style: normal;
+    }
+
+    .bl {
+        color: black;
+    }
+
+    .navigation-bar a {
+        color: #000 !important;
+    }
+
+    .menu:after {
+        color: #000 !important;
+    }
+
+    .navigation-bar {
+        border-bottom: 1px solid rgb(0 0 0 / 20%) !important;
+    }
+
+    .dark-bar {
+        background-color: #fff0fd !important;
+    }
+
+    .overl {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный цвет */
+        z-index: 999; /* Определяет порядок наложения элементов */
+    }
+
+    .siz {
+        font-size: 16px;
+    }
+
+    html {
+        font-size: 16px;
+    }
+
+    .modall {
+        width: calc(70%);
+        display: none;
+        margin: auto auto;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+        height: max-content !important;
+        overflow-y: auto !important;
+    }
+
+    #imageContainer {
+        margin: 0 auto !important;
+    }
+
+        #imageContainer:hover {
+            cursor: pointer;
+        }
+
+    .u-text-white .u-svg-link {
+        fill: #000000 !important;
+    }
+
+    .accordion {
+        background-color: #eee;
+        color: #444;
+        cursor: pointer;
+        padding: 18px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-size: 15px;
+        transition: 0.4s;
+    }
+
+        .accordion.h {
+            cursor: default;
+        }
+
+        .active, .accordion:hover {
+            background-color: #ccc;
+        }
+
+        .accordion.h:hover {
+            background-color: #eee;
+        }
+
+    .panel {
+        padding: 0 18px;
+        display: none;
+        background-color: white;
+        overflow: hidden;
+    }
+
+    .ord {
+        margin: 30px;
+    }
+
+    .orders h2 {
+        color: #555454 !important;
+        margin: 0 auto;
+        margin-top: 30px;
+    }
+
+    .orders {
+        display: none;
+    }
+
+    #mySidenav {
+        z-index: 1000;
+    }
+</style>
+
+<script>
+
+    $(document).ready(function () {
+
+        $(window).scroll(function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 400) {
+                $(".navbar").addClass("navbar-fixed-top");
+            } else {
+                $(".navbar").removeClass("navbar-fixed-top");
+            }
+        });
+
+        // Menu bar
+        $(".menu").click(function () {
+            $(this).toggleClass('m c');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main').append('<div class="overl"></div>');
+            document.body.style.overflow = 'hidden';
+        });
+
+        $("#mySidenav .closebtn").click(function () {
+            $('.menu').toggleClass('c m');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main .overl').remove();
+            document.body.style.overflow = 'auto';
+        });
+
+
+    });
+
+    $(document).ready(function () {
+        $('#showPassword').change(function () {
+            var passwordField = $('#text-7c35');
+            var isChecked = $(this).is(':checked');
+            if (isChecked) {
+                passwordField.attr('type', 'text');
+            } else {
+                passwordField.attr('type', 'password');
+            }
+        });
+
+        $('#showPassword2').change(function () {
+            var passwordField = $('#text-8330');
+            var isChecked = $(this).is(':checked');
+            if (isChecked) {
+                passwordField.attr('type', 'text');
+            } else {
+                passwordField.attr('type', 'password');
+            }
+        });
+    });
+
+    $j = jQuery.noConflict();
+
+    $j(document).ready(function () {
+
+        $j('#text-3a6b').inputmask({
+            mask: '+375 (99) 999-99-99',
+            placeholder: '_'
+        });
+    });
+
+    function returnModal() {
+        $.ajax({
+            url: 'GetUser',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                $.ajax({
+                    url: 'GetImage', // Замените на соответствующий URL-адрес метода GetImage
+                    type: 'GET',
+                    data: { id: data.image }, // Замените на соответствующий идентификатор изображения
+                    dataType: 'text',
+                    success: function (imageUrl) {
+                        // Изменение стиля background-image элемента
+                        var element = document.getElementById('imageContainer');
+                        element.style.backgroundImage = 'url("' + imageUrl + '")';
+                    },
+                    error: function () {
+                        console.log('Ошибка получения изображения');
+                    }
+                });
+
+                $('#name-66b3').val(data.name);
+                $('#email-66b3').val(data.login);
+                $('#text-3a6b').val(data.phone);
+                if (document.getElementById('imageContainer').classList.contains('ch'))
+                    document.getElementById('imageContainer').classList.remove('ch');
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    }
+
+    function changeAccount() {
+        $.ajax({
+            url: 'GetUser',
+            type: 'GET',
+            dataType: 'json',
+            success: function (data) {
+
+                $.ajax({
+                    url: 'GetImage', // Замените на соответствующий URL-адрес метода GetImage
+                    type: 'GET',
+                    data: { id: data.image }, // Замените на соответствующий идентификатор изображения
+                    dataType: 'text',
+                    success: function (imageUrl) {
+                        // Изменение стиля background-image элемента
+                        console.log(imageUrl);
+                        var element = document.getElementById('imageIcon');
+                        element.style.backgroundImage = 'url("/Home/GetImage/' + data.image + '")';
+                    },
+                    error: function () {
+                        console.log('Ошибка получения изображения');
+                    }
+                });
+
+                $('#userName').text(data.name);
+                $('#userLogin').text(data.login);
+                $('#secr').text(data.password);
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var imageContainer = document.getElementById('imageContainer');
+
+        imageContainer.addEventListener('click', openImageUploader);
+
+        $("#change_data").click(function (event) {
+            event.preventDefault();
+            $('.modall').show();
+            returnModal();
+            $('.main').append('<div class="overl"></div>');
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.documentElement.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.documentElement.style.width = '100%';
+        });
+
+        $("#close").click(function () {
+            $('.modall').hide();
+            $('.main .overl').remove();
+            document.body.style.overflow = 'auto';
+            document.documentElement.style.overflow = 'auto';
+            document.body.style.position = 'static';
+            document.documentElement.style.position = 'static';
+            document.body.style.width = 'auto';
+            document.documentElement.style.width = 'auto';
+        });
+
+        var acc = document.querySelectorAll('.accordion:not(.h)');
+        var i;
+
+        for (i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    var panelHeight = panel.offsetHeight / 2;
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                    var panelHeight = panel.offsetHeight;
+                    $("html, body").animate({
+                        scrollTop: "+=" + panelHeight
+                    }, 1500); // 500 - время анимации в миллисекундах
+                }
+            });
+        }
+
+
+        $("#cur").click(function (event) {
+            event.preventDefault();
+            var panels = document.getElementsByClassName('panel');
+            var accordions = document.getElementsByClassName('accordion');
+            for (let i = 0; i < panels.length; i++) {
+                panels[i].style.display = "none";
+            }
+            for (let i = 0; i < accordions.length; i++) {
+                accordions[i].classList.remove("active");
+            }
+
+            if (!$(".orders").is(":visible")) {
+                $(".orders").show();
+                $(".current").show();
+                $(".closed").hide();
+
+                $("html, body").animate({
+                    scrollTop: "+=150px"
+                }, 500); // 500 - время анимации в миллисекундах
+            } else {
+                $(".orders").show();
+                $(".current").show();
+                $(".closed").hide();
+            }
+        });
+
+        $("#cl").click(function (event) {
+            event.preventDefault();
+
+            var panels = document.getElementsByClassName('panel');
+            var accordions = document.getElementsByClassName('accordion');
+            for (let i = 0; i < panels.length; i++) {
+                panels[i].style.display = "none";
+            }
+            for (let i = 0; i < accordions.length; i++) {
+                accordions[i].classList.remove("active");
+            }
+
+            if (!$(".orders").is(":visible")) {
+
+                $(".orders").show();
+                $(".closed").show();
+                $(".current").hide();
+
+                $("html, body").animate({
+                    scrollTop: "+=150px"
+                }, 500); // 500 - время анимации в миллисекундах
+            } else {
+
+                $(".orders").show();
+                $(".closed").show();
+                $(".current").hide();
+            }
+        });
+
+        $('#imageContainer').click(function () {
+            $('#err').hide();
+            $('#succ').hide();
+        });
+
+        $('#name-66b3').focus(function () {
+            $('#err').hide();
+            $('#succ').hide();
+        });
+
+        $('#email-66b3').focus(function () {
+            $('#err').hide();
+            $('#succ').hide();
+        });
+
+        $('#text-3a6b').focus(function () {
+            $('#err').hide();
+            $('#succ').hide();
+        });
+
+        $('#checkbox-59d8').change(function () {
+            $('#err').hide();
+            $('#succ').hide();
+        });
+
+        $('#text-7c35').focus(function () {
+            $('#err').hide();
+            $('#succ').hide();
+        });
+
+        $('#text-8330').focus(function () {
+            $('#err').hide();
+            $('#succ').hide();
+        });
+
+        $("#save").click(function (event) {
+            event.preventDefault();
+
+            if ($('#name-66b3').val() == "") {
+                $('#err').text("Вы не ввели имя!");
+                $('#err').show();
+            } else if ($('#email-66b3').val() == "") {
+                $('#err').text("Вы не ввели email!");
+                $('#err').show();
+            } else if ($('#text-3a6b').val().endsWith('_') || $('#text-3a6b').val() == "") {
+                $('#err').text("Вы не ввели номер телефона!");
+                $('#err').show();
+            } else if ($('#text-7c35').is(":visible") && ($('#text-7c35').val() == "" || $('#text-8330').val() == "") || $('#text-7c35').val() == $('#text-8330').val() || $('#text-7c35').val() != $('#secr').text()) {
+                $('#err').text("Вы не ввели один из паролей, они совпадают или старый пароль неверный!");
+                $('#err').show();
+            } else {
+                let image = "no";
+                if (imageContainer.classList.contains('ch')) {
+                    image = "yes";
+                }
+                $.ajax({
+                    url: "ChangeUserData",
+                    type: "POST",
+                    data: {
+                        image: image,
+                        name: ($('#name-66b3').val()),
+                        login: $('#email-66b3').val(),
+                        password: $('#text-7c35').val(),
+                        phone: $('#text-3a6b').val()
+                    },
+                    success: function (data) {
+                        if (data == "yes") {
+                            $('#succ').show();
+                            changeAccount();
+                        }
+                        else {
+                            $('#err').text("Вы ничего не изменили!");
+                            $('#err').show();
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+
+                    }
+                });
+            }
+        });
+    });
+
+    function getImageFileFromURL(imageURL) {
+        return fetch(imageURL)
+            .then(response => response.blob())
+            .then(blob => new File([blob], "image.jpg", { type: "image/jpeg" }));
+    }
+
+    // Функция обработчика события клика
+    function openImageUploader() {
+        // Создаем элемент <input> типа "file"
+        var fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = "image/*";
+
+        // Добавляем обработчик события "change"
+        fileInput.addEventListener('change', handleImageUpload);
+
+        // Запускаем выбор файла
+        fileInput.click();
+    }
+
+    // Функция обработчика события "change"
+    function handleImageUpload(event) {
+        var file = event.target.files[0];
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var newImageSrc = e.target.result;
+                imageContainer.style.backgroundImage = `url("${newImageSrc}")`;
+                if (!imageContainer.classList.contains('ch'))
+                    imageContainer.classList.add('ch');
+
+                // Создаем объект FormData и добавляем в него файл
+                var formData = new FormData();
+                formData.append('file', file);
+                console.log(formData);
+                // Отправляем файл на сервер с использованием fetch и метода POST
+                fetch('SetUserImage', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            // Обработка успешного ответа от сервера
+                            console.log('Файл успешно отправлен на сервер');
+                        } else {
+                            // Обработка ошибки
+                            console.error('Ошибка при отправке файла на сервер');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Ошибка при отправке файла на сервер:', error);
+                    });
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let isEmp = "";
+        fetch('/Home/GetIsEmployee')
+            .then(response => response.text())
+            .then(data => {
+                isEmp = data;
+                if (isEmp == "true") {
+                    const e = document.createElement('a');
+                    e.id = "admin";
+                    e.href = "admin.html";
+                    e.innerText = `Администратор`;
+                    document.getElementById(`mySidenav`).append(e);
+                }
+                const v = document.createElement('div');
+                v.classList.add("exit");
+                v.innerHTML = `<a href="#" id="exet_acc" onclick="logout()">Выйти</a>`;
+                document.getElementById(`mySidenav`).append(v);
+            })
+            .catch(error => console.error(error));
+
+    });
+
+</script>
+
+<div id="mySidenav" class="sidenav hide-menu">
+    <a href="javascript:void(0)" class="closebtn">×</a>
+    <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+    <a id="desertss" asp-area="" asp-controller="Home" asp-action="Desserts">Десерты</a>
+    <a asp-area="" asp-controller="Home" asp-action="Basket">Корзина</a>
+
+    <div class="exit">
+        <a href="#" id="exet_acc" onclick="logout()">Выйти</a>
+    </div>
+</div>
+<div class="main null_shadow"  id="main">
+    <nav class="navbar navbar-default navbar-vira dark-bar">
+        <div class="container">
+            <div class="navigation-bar">
+                <div class="row">
+                    <div id="cr" class="col-xs-6">
+                        <div class="menu m">
+                            <a href="#"><span class="ion-navicon _ion-android-menu"></span></a>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 text-right">
+                        <div class="logo">
+                            <img src="/icons/black_logo.svg" alt="Логотип">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <section class="u-align-center u-clearfix u-section-1" id="sec-b9d9">
+        <div class="u-clearfix u-sheet u-valign-middle-md u-valign-middle-sm u-valign-middle-xs u-sheet-1">
+            <div class="u-expanded-width-sm u-shape u-shape-svg u-text-custom-color-2 u-shape-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-direction="X" data-animation-delay="500">
+                <svg class="u-svg-link" preserveAspectRatio="none" viewBox="0 0 160 150" style=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-cade"></use></svg>
+                <svg class="u-svg-content" viewBox="0 0 160 150" x="0px" y="0px" id="svg-cade">
+                    <path d="M43.2,126.9c14.2,1.3,27.6,7,39.1,15.6c8.3,6.1,19.4,10.3,32.7,5.3c11.7-4.4,18.6-17.4,21-30.2c2.6-13.3,8.1-25.9,15.7-37.1
+	c8.3-12.1,10.8-27.9,5.3-42.7C150.5,20.3,134.6,9,117,7.6C107.9,6.9,98.8,5,90.1,1.9C83-0.6,75-0.7,67.4,2.1
+	c-9.9,3.7-17,11.6-20.1,21c-3.3,10.1-10.9,18-20.6,22.2c-0.1,0-0.1,0.1-0.2,0.1c-20.3,8.9-31,32-24.6,53.2
+	C6.9,115.6,25.2,125.2,43.2,126.9z"></path>
+                </svg>
+            </div>
+            <div id="imageIcon" style="background-image: url(@Url.Action("GetImage", "Home", new { id = Model.UserModel.Изображение }))" class="u-expanded-width-sm u-image u-image-circle u-image-1" data-image-width="236" data-image-height="291" data-animation-name="customAnimationIn" data-animation-duration="1500" alt=""></div><span class="u-hidden-sm u-hidden-xs u-icon u-text-custom-color-3 u-icon-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 1000 1000" style=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-3a1a"></use></svg><svg class="u-svg-content" viewBox="0 0 1000 1000" x="0px" y="0px" id="svg-3a1a" style="enable-background:new 0 0 1000 1000;"><rect x="152.8" y="152.8" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -207.1068 500)" style="fill:currentColor;" width="694.4" height="694.4"></rect></svg></span>
+            <div class="siz u-align-center u-container-style u-group u-shape-rectangle u-group-1" data-animation-name="customAnimationIn" data-animation-duration="1000">
+                <div class="u-container-layout u-container-layout-1">
+                    <h3 id="userName" class="u-text u-text-custom-color-1 u-text-1">@Model.UserModel.Имя</h3>
+                    <h3 id="userLogin" class="u-text u-text-body-alt-color u-text-2">@Model.UserModel.Логин</h3>
+                    <p class="srift u-text u-text-white u-text-3">
+                        @Model.UserModel.РольNavigation.Название<br>
+                    </p>
+                    <a id="change_data" href="#" class="srift u-active-white u-border-none u-btn u-btn-round u-button-style u-custom-color-1 u-custom-font u-font-pt-sans u-hover-white u-radius-50 u-text-active-custom-color-1 u-text-hover-custom-color-1 u-text-white u-btn-1">
+                        ИЗМЕНИТЬ<br>ДАННЫЕ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="u-align-center u-clearfix u-custom-color-3 u-section-2" id="carousel_81fa">
+        <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
+            <h2 class="u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">Мои заказы</h2>
+            <p class="srift bl u-text u-text-custom-color-2 u-text-default u-text-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500"> Здесь вы можете просмотреть все ваши заказы&nbsp;</p>
+            <div class="siz pad u-expanded-width u-list u-list-1">
+                <div class="u-repeater u-repeater-1">
+                    <div class="u-align-left u-border-2 u-border-palette-2-light-2 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round u-video-cover u-white u-list-item-1" data-animation-name="customAnimationIn" data-animation-duration="1500">
+                        <div class="u-container-layout u-similar-container u-container-layout-1">
+                            <div class="u-align-center u-container-style u-custom-color-1 u-group u-radius-50 u-shape-round u-group-1" data-animation-name="customAnimationIn" data-animation-duration="1500">
+                                <div class="u-container-layout u-valign-middle">
+                                    <h6 class="u-text u-text-custom-color-2 u-text-3">
+                                        текущие<br>
+                                    </h6>
+                                </div>
+                            </div>
+                            <h5 class="u-text u-text-custom-color-1 u-text-4" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500"> n заказов</h5>
+                            <p class="srift bl u-text u-text-default u-text-5" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">Кликните на кнопку для просмотра заказов.</p>
+                            <a id="cur" href="#" class="u-border-2 u-border-custom-color-1 u-btn u-btn-round u-button-style u-hover-custom-color-1 u-none u-radius-50 u-text-hover-white u-btn-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">просмотреть</a>
+                        </div>
+                    </div>
+                    <div class="u-align-left u-border-2 u-border-palette-2-light-2 u-container-style u-list-item u-radius-20 u-repeater-item u-shape-round u-video-cover u-white u-list-item-2" data-animation-name="customAnimationIn" data-animation-duration="1500">
+                        <div class="u-container-layout u-similar-container u-container-layout-3">
+                            <div class="u-align-center u-container-style u-custom-color-1 u-group u-radius-50 u-shape-round u-group-2" data-animation-name="customAnimationIn" data-animation-duration="1500">
+                                <div class="u-container-layout u-valign-middle">
+                                    <h6 class="u-text u-text-custom-color-2 u-text-6">закрытые</h6>
+                                </div>
+                            </div>
+                            <h5 class="u-text u-text-custom-color-1 u-text-7" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500"> n заказов</h5>
+                            <p class="srift bl u-text u-text-default u-text-8" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">Кликните на кнопку для просмотра заказов.</p>
+                            <a id="cl" href="#" class="srift u-border-2 u-border-custom-color-1 u-btn u-btn-round u-button-style u-hover-custom-color-1 u-none u-radius-50 u-text-hover-white u-btn-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">просмотреть</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="orders">
+        <h2 class="u-text u-text-default u-text-1 animated customAnimationIn-played" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500" style="will-change: transform, opacity; animation-duration: 1500ms;">Мои заказы</h2>
+        <div class="ord">
+            <button class="accordion h">Номер / Дата заказа / Дата выдачи / Стоимость / Статус / Количество десертов </button>
+            @for (var i = 0; i < Model.OrdersModel.Count; i++)
+            {
+                var cost = "";
+                if (Model.OrdersModel[i].Скидка != null)
+                { cost = @Model.OrdersModel[i].Стоимость + " руб. (со скидкой)"; }
+                else
+                { cost = @Model.OrdersModel[i].Стоимость + " руб."; }
+
+                if (@Model.OrdersModel[i].СтатусNavigation.Номер < 5)
+                {
+                    <button class="accordion current">@Model.OrdersModel[i].Номер / @Model.OrdersModel[i].ДатаЗаказа.ToShortDateString() / @Model.OrdersModel[i].ДатаВыдачи.ToShortDateString() / @cost / @Model.OrdersModel[i].СтатусNavigation.Название / @Model.DessertsModel[i].Count</button>
+                }
+                else
+                {
+                    <button class="accordion closed">@Model.OrdersModel[i].Номер / @Model.OrdersModel[i].ДатаЗаказа.ToShortDateString() / @Model.OrdersModel[i].ДатаВыдачи.ToShortDateString() / @cost / @Model.OrdersModel[i].СтатусNavigation.Название / @Model.DessertsModel[i].Count</button>
+                }
+
+                <div class="panel">
+                    <div class="row">
+                        <div class="col-md-12 ftco-animate">
+                            <div class="cart-list">
+                                <table class="table">
+                                    <thead class="thead-primary">
+                                        <tr class="text-center">
+                                            <th>&nbsp;</th>
+                                            <th>Десерт</th>
+                                            <th>Стоимость</th>
+                                            <th>Количество</th>
+                                            <th>Всего</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="goods">
+                                        @for (var j = 0; j < Model.DessertsModel[i].Count; j++)
+                                        {
+                                            var cost2 = Model.DessertsModel[i][j].Количество * Model.DessertsModel[i][j].ДесертNavigation.Стоимость;
+                                            <tr class="text-center">
+
+                                                <td class="image-prod"><div class="img" style="background-image:url(@Url.Action("GetImage", "Home", new { id = @Model.DessertsModel[i][j].ДесертNavigation.ИзображениеNavigation.Номер }));"></div></td>
+
+                                                <td class="product-name">
+                                                    <h3>@Model.DessertsModel[i][j].ДесертNavigation.Название</h3>
+                                                    <p>@Model.DessertsModel[i][j].ДесертNavigation.ТипNavigation.Название</p>
+                                                </td>
+
+                                                <td class="price" id="price">@Model.DessertsModel[i][j].ДесертNavigation.Стоимость руб.</td>
+
+                                                <td class="quantity">
+                                                    @Model.DessertsModel[i][j].Количество
+                                                </td>
+
+                                                <td class="total" id="total_@Model.OrdersModel[i].Номер @Model.DessertsModel[i][j].Номер">@cost2 руб.</td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </section>
+</div>
+
+
+<div class="modall u-align-center u-form u-radius-50 u-white u-form-1">
+    <span id="close" class="u-hover-feature u-icon u-icon-rectangle u-palette-1-base u-text-white u-icon-1">
+        <svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 52 52" style=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-03ab"></use></svg><svg class="u-svg-content" viewBox="0 0 52 52" x="0px" y="0px" id="svg-03ab" style="enable-background:new 0 0 52 52;">
+            <g>
+                <path d="M26,0C11.664,0,0,11.663,0,26s11.664,26,26,26s26-11.663,26-26S40.336,0,26,0z M26,50C12.767,50,2,39.233,2,26
+		S12.767,2,26,2s24,10.767,24,24S39.233,50,26,50z"></path>
+                <path d="M35.707,16.293c-0.391-0.391-1.023-0.391-1.414,0L26,24.586l-8.293-8.293c-0.391-0.391-1.023-0.391-1.414,0
+		s-0.391,1.023,0,1.414L24.586,26l-8.293,8.293c-0.391,0.391-0.391,1.023,0,1.414C16.488,35.902,16.744,36,17,36
+		s0.512-0.098,0.707-0.293L26,27.414l8.293,8.293C34.488,35.902,34.744,36,35,36s0.512-0.098,0.707-0.293
+		c0.391-0.391,0.391-1.023,0-1.414L27.414,26l8.293-8.293C36.098,17.316,36.098,16.684,35.707,16.293z"></path>
+            </g>
+        </svg>
+    </span>
+    <form id="forrm" action="https://forms.nicepagesrv.com/v2/form/process" class="u-clearfix u-form-spacing-25 u-form-vertical u-inner-form" source="email" name="form" style="padding: 30px;">
+
+        <h3 class="u-align-center u-custom-font u-font-ubuntu u-form-group u-form-text u-label-top u-text u-text-1">Личные данные</h3>
+        <div id="imageContainer" style="background-image:url(@Url.Action("GetImage", "Home", new { id = @Model.UserModel.Изображение }))" class="im u-form-group u-form-image u-image u-image-circle u-image-1" data-image-width="720" data-image-height="1280"></div>
+        <div class="u-form-group u-form-name u-form-partition-factor-2 u-label-top">
+            <label for="name-66b3" class="u-label">Имя</label>
+            @if (Model.UserModel.Имя != null)
+            {
+                <input type="text" placeholder="Введите имя" value="@Model.UserModel.Имя" id="name-66b3" name="name" class="u-grey-5 u-input u-input-rectangle u-radius-10" required="" maxlength="100">
+            }
+            else
+            {
+                <input type="text" placeholder="Введите имя" id="name-66b3" name="name" class="u-grey-5 u-input u-input-rectangle u-radius-10" required="" maxlength="100">
+            }
+        </div>
+        <div class="u-form-email u-form-group u-form-partition-factor-2 u-label-top">
+            <label for="email-66b3" class="u-label">Логин</label>
+            <input type="email" placeholder="Введите логин" value="@Model.UserModel.Логин" id="email-66b3" name="email" class="u-grey-5 u-input u-input-rectangle u-radius-10" required="" maxlength="100">
+        </div>
+        <div class="u-form-group u-label-top u-form-group-5">
+            <label for="text-3a6b" class="u-label">Номер телефона</label>
+            @if (Model.UserModel.НомерТелефона != null)
+            {
+                <input type="text" placeholder="Введите номер телефона" value="@Model.UserModel.НомерТелефона" id="text-3a6b" name="phone" class="u-grey-5 u-input u-input-rectangle u-radius-10">
+            }
+            else
+            {
+                <input type="text" placeholder="Введите номер телефона" id="text-3a6b" name="phone" class="u-grey-5 u-input u-input-rectangle u-radius-10">
+            }
+        </div>
+        <p id="secr">@Model.UserModel.Пароль</p>
+        <div class="u-form-checkbox u-form-group u-label-top u-form-group-6">
+            <input type="checkbox" id="checkbox-59d8" name="checkbox" value="On" class="u-active-custom-color-1 u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-custom-color-2 u-field-input u-radius-50">
+            <label for="checkbox-59d8" class="u-field-label">Изменить пароль</label>
+        </div>
+        <div class="u-form-group u-form-partition-factor-2 u-label-top u-form-group-7" data-dependency="[{&quot;action&quot;:&quot;show&quot;,&quot;field&quot;:&quot;checkbox&quot;,&quot;condition&quot;:&quot;equal&quot;,&quot;value&quot;:&quot;On&quot;}]">
+            <label for="text-7c35" class="u-label u-label-4">Старый пароль</label>
+            <input type="password" placeholder="Введите старый пароль" id="text-7c35" name="old_password" class="u-grey-5 u-input u-input-rectangle u-radius-10" maxlength="100">
+            <input type="checkbox" id="showPassword" class="u-active-custom-color-1 u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-custom-color-2 u-field-input u-radius-50">
+            <label for="showPassword">Показать пароль</label>
+        </div>
+        <div class="u-form-group u-form-partition-factor-2 u-label-top u-form-group-8" data-dependency="[{&quot;action&quot;:&quot;show&quot;,&quot;field&quot;:&quot;checkbox&quot;,&quot;condition&quot;:&quot;equal&quot;,&quot;value&quot;:&quot;On&quot;}]">
+            <label for="text-8330" class="u-label">Новый пароль</label>
+            <input type="password" placeholder="Введите новый пароль" id="text-8330" name="new_password" class="u-grey-5 u-input u-input-rectangle u-radius-10" maxlength="100">
+            <input type="checkbox" id="showPassword2" class="u-active-custom-color-1 u-border-2 u-border-active-custom-color-3 u-border-custom-color-3 u-custom-color-2 u-field-input u-radius-50">
+            <label for="showPassword2">Показать пароль</label>
+        </div>
+        <div class="u-align-center u-form-group u-form-submit u-label-top">
+            <a id="save" href="#" class="u-border-1 u-border-custom-color-1 u-border-hover-custom-color-1 u-btn u-btn-round u-btn-submit u-button-style u-custom-color-1 u-hover-custom-color-2 u-radius-30 u-text-custom-color-2 u-text-hover-custom-color-1 u-btn-1">Сохранить</a>
+            @*<input type="submit" value="submit" class="u-form-control-hidden">*@
+        </div>
+        <div id="succ" class="u-form-send-message u-form-send-success"> Данные успешно изменены. </div>
+        <div id="err" class="u-form-send-error u-form-send-message"> Произошла ошибка, попробуйте снова. </div>
+        <input type="hidden" value="" name="recaptchaResponse">
+        <input type="hidden" name="formServices" value="84b85c826a2ab709a3f5758ec477e1ae">
+    </form>
+</div>

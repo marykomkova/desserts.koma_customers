@@ -1,0 +1,153 @@
+@model List<Десерты>
+
+    <title>Desserts.koma | @Model[0].Название</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
+
+    <link href="~/css/ionicons.min.css" rel="stylesheet">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/animate.css">
+
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css">
+
+    <link rel="stylesheet" href="~/css/aos.css">
+
+    <link rel="stylesheet" href="~/css/icomoon.css">
+    <link rel="stylesheet" href="~/css/flaticon.css">
+
+    <link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="~/css/jquery.timepicker.css">
+
+
+    <link rel="stylesheet" href="~/css/flaticon.css">
+    <link rel="stylesheet" href="~/css/icomoon.css">
+    <link href="~/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/dessert.css">
+
+    <script src="~/js/jquery.min.js"></script>
+    <script src="~/js/jquery-migrate-3.0.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.easing.1.3.js"></script>
+    <script src="~/js/jquery.waypoints.min.js"></script>
+    <script src="~/js/jquery.stellar.min.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/jquery.animateNumber.min.js"></script>
+    <script src="~/js/dessert.js"></script>
+    <script src="https://use.fontawesome.com/55b73bf748.js"></script>
+    @{
+    var myData = Model[0].Номер;
+    }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var i = $(document.querySelector('.product-details')).data("id");
+            fetch(`/Home/GetIngredientsInDessert?des=${i}`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById(`descr`).innerText = data;
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+
+
+    <div id="mySidenav" class="sidenav hide-menu">
+        <a href="javascript:void(0)" class="closebtn">×</a>
+        <a href="index.html">Главная</a>
+        <a href="desserts.html" id="desertss">Десерты</a>
+        <a id="basket" href="basket.html">Корзина</a>
+        <a id="admin" href="admin.html">Администратор</a>
+        <a id="enter" href="login.html">Вход</a>
+        <a id="rezepr" href="recipes.html">Рецепты</a>
+        <div class="exit">
+            <a href="#" id="exet_acc">Выйти</a>
+        </div>
+    </div>
+    <div class="main null_shadow" id="main">
+        <header class="bg-img header">
+            <nav class="navbar navbar-default navbar-vira">
+                <div class="container">
+                    <div class="navigation-bar">
+                        <div class="row">
+                            <div id="cr" class="col-xs-6">
+                                <div class="menu m">
+                                    <a href="#"><span class="ion-navicon _ion-android-menu"></span></a>
+                                </div>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <div class="logo">
+                                    <img src="/icons/white_logo.svg" alt="Логотип">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <div class="row">
+                    <div class="intro-box">
+                        <div class="intro">
+                            <p id="head-title">@Model[0].Название.ToUpper()</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="ftco-section bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6 mb-5 ftco-animate">
+                        <a class="image-popup" id="picHref"><img src="@Url.Action("GetImage", "Home" , new { id = @Model[0].ИзображениеNavigation.Номер })" class="img-fluid" alt="Colorlib Template"></a>
+                    </div>
+                    <div class="col-lg-6 product-details pl-md-5 ftco-animate" data-id="@Model[0].Номер">
+                        <h3 id="title2">@Model[0].Название</h3>
+                        <p class="price"><span id="cost">@Model[0].Стоимость руб.</span></p>
+                        <p id="tip">Тип: @Model[0].ТипNavigation.Название</p>
+                        <p id="category">@Model[0].Количество (@Model[0].ТипNavigation.ЕдиницаИзмеренияNavigation.Название)</p>
+                        <p id="descr"></p>
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="form-group d-flex">
+                                    <div class="select-wrap">
+                                    </div>
+                                </div>
+                                <div class="w-100"></div>
+                                <p><p id="bask" class="btn btn-primary py-3 px-5">Добавить в корзину</p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        @*<div id="demo-modal-fail" class="modal">
+            <div class="modal__content">
+                <h1>Ошибка</h1>
+
+                <p>
+                    Что-то пошло не так! Повторите операцию.
+                </p>
+
+                <div class="modal__footer">
+                    Made with <i class="fa fa-heart"></i>, by @desserts.koma
+                </div>
+
+                <a href="admin.html" class="modal__close">&times;</a>
+            </div>
+        </div>*@
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p> Создано с <span class="fa fa-heart"></span> <a href="https://www.instagram.com/desserts.koma/">Desserts.koma</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>

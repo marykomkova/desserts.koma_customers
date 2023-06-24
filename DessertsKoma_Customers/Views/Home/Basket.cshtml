@@ -1,0 +1,465 @@
+@model List<ДесертыВкорзине>
+<title>Desserts.koma - Корзина</title>
+
+<link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
+
+<link href="~/css/bootstrap.min.css" rel="stylesheet">
+<link href="~/css/bootstrap-theme.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/open-iconic-bootstrap.min.css">
+<link rel="stylesheet" href="~/css/animate.css">
+
+<link rel="stylesheet" href="~/css/owl.carousel.min.css">
+<link rel="stylesheet" href="~/css/owl.theme.default.min.css">
+<link rel="stylesheet" href="~/css/magnific-popup.css">
+
+<link rel="stylesheet" href="~/css/aos.css">
+
+<link rel="stylesheet" href="~/css/ionicons.min.css">
+<link rel="stylesheet" href="~/css/icomoon.css">
+
+<link rel="stylesheet" href="~/css/bootstrap-datepicker.css">
+<link rel="stylesheet" href="~/css/jquery.timepicker.css">
+
+<link rel="stylesheet" href="~/css/visibleOrNot.css">
+<link rel="stylesheet" href="~/css/flaticon.css">
+<link href="~/css/style.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/basket.css">
+
+<script src="~/js/jquery.min.js"></script>
+<script src="~/js/jquery-migrate-3.0.1.min.js"></script>
+<script src="~/js/popper.min.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/jquery.easing.1.3.js"></script>
+<script src="~/js/jquery.waypoints.min.js"></script>
+<script src="~/js/jquery.stellar.min.js"></script>
+<script src="~/js/owl.carousel.min.js"></script>
+<script src="~/js/jquery.magnific-popup.min.js"></script>
+<script src="~/js/aos.js"></script>
+<script src="~/js/jquery.animateNumber.min.js"></script>
+<script src="~/js/bootstrap-datepicker.js"></script>
+<script src="~/js/scrollax.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+<script src="~/js/google-map.js"></script>
+<script src="~/js/sidenav.js"></script>
+
+<script>
+
+    $(document).ready(function() {
+    $('p span.ion-ios-close').click(function() {
+        var dessertId = $(this).attr('id');
+        var dessert = $(this).parent().parent().parent();
+        $.post('@Url.Action("DeleteDessertInBasket")', { id: dessertId })
+            .done(function(data) {
+                if (data === 'true') {
+                    dessert.remove();
+                    setCost();
+                } else {
+                    alert('Произошла ошибка при удалении десерта из корзины.');
+                }
+            })
+            .fail(function() {
+                alert('Произошла ошибка при удалении десерта из корзины.');
+            });
+    });
+});
+
+    $(document).ready(function () {
+        $('.dessert-quantity').change(function () {
+            var dessertId = $(this).data('dessert-id');
+            var newQuantity = $(this).val();
+
+            $.ajax({
+                url: "/Home/ChangeDessertCountInBasket",
+                type: "POST",
+                data: { id: dessertId, count: newQuantity },
+                success: function (result) {
+                    var cost = result;
+                    $('#total_' + dessertId).text(cost + ' руб.');
+                    console.log($('#total_' + dessertId));
+                    setCost();
+                },
+                error: function () {
+                    alert('Ошибка при изменении количества десерта в корзине.');
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        $('#apply').click(function () {
+            event.preventDefault();
+            var coupon = $('#couponText').val();
+            $.ajax({
+                url: '/Home/GetDiscountFromBD',
+                type: 'GET',
+                data: { phrase: coupon },
+                success: function (data) {
+                    if (data != null) {
+                        // Обновление блока с информацией о стоимости заказа
+                        var cost = parseFloat($('#totCost').text().replace(' руб.', ''));
+                        var sale = cost * data / 100;
+                        if (sale == +$('#sale').text().replace(' руб.', '')) {
+                            alert('Купон уже применен');
+                        } else {
+                            $('#sale').text(sale.toFixed(2) + ' руб.');
+                            $('#totCost2').text((cost - sale).toFixed(2) + ' руб.');
+                        }
+                    } else {
+                        // Вывод сообщения об ошибке
+                        alert('Купон не найден');
+                    }
+                },
+                error: function () {
+                    // Вывод сообщения об ошибке
+                    alert('Произошла ошибка при выполнении запроса');
+                }
+            });
+        });
+    });
+
+    function logout() {
+        $.ajax({
+            url: "/Home/Logout",
+            type: "POST",
+            success: function (result) {
+                if (result) {
+                    $(".result").html(result);
+                    window.location.href = `Index`;
+                }
+            }
+        });
+    }
+
+    function setCost() {
+        var totals = $('.total');
+
+        var discount = +$('#sale').text().replace(' руб.', '');
+
+        var sum = 0;
+        totals.each(function () {
+            var text = $(this).text().replace(' руб.', '');
+            sum += parseInt(text);
+        });
+
+        var totalText = sum.toString() + ' руб.';
+        $('#totCost').text(totalText);
+
+        var ttotalText = (sum - discount).toString() + ' руб.';
+        $('#totCost2').text(totalText);
+        setDiscount();
+    }
+
+    function setDiscount() {
+        let disc = 0;
+        fetch('/Home/GetDiscount')
+            .then(response => response.text())
+            .then(data => {
+                disc = data;
+                if (disc != 0) {
+                    var sale = +($('#totCost').text().replace(' руб.', '')) * disc / 100;
+                    $('#sale').text(sale + ' руб.');
+                    $('#totCost2').text(+($('#totCost').text().replace(' руб.', '')) - sale + ' руб.');
+                }
+            })
+            .catch(error => console.error(error));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let isEmp = "";
+        fetch('/Home/GetIsEmployee')
+            .then(response => response.text())
+            .then(data => {
+                isEmp = data;
+                if (isEmp == "true") {
+                    const e = document.createElement('a');
+                    e.id = "admin";
+                    e.href = "admin.html";
+                    e.innerText = `Администратор`;
+                    document.getElementById(`mySidenav`).append(e);
+                }
+            })
+            .catch(error => console.error(error));
+
+        setCost();
+        setDiscount();
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let isEmp = "";
+        fetch('/Home/GetIsEmployee')
+            .then(response => response.text())
+            .then(data => {
+                isEmp = data;
+                if (isEmp == "true") {
+                    const e = document.createElement('a');
+                    e.id = "admin";
+                    e.href = "admin.html";
+                    e.innerText = `Администратор`;
+                    document.getElementById(`mySidenav`).append(e);
+                }
+                const v = document.createElement('div');
+                v.classList.add("exit");
+                v.innerHTML = `<a href="#" id="exet_acc" onclick="logout()">Выйти</a>`;
+                document.getElementById(`mySidenav`).append(v);
+            })
+            .catch(error => console.error(error));
+        
+    });
+</script>
+
+<div id="mySidenav" class="sidenav hide-menu">
+    <a href="javascript:void(0)" class="closebtn">×</a>
+    <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+    <a id="desertss" asp-area="" asp-controller="Home" asp-action="Desserts">Десерты</a>
+    <a asp-area="" asp-controller="Home" asp-action="Account">Аккаунт</a>
+    <div class="exit">
+        <a href="#" id="exet_acc" onclick="logout()">Выйти</a>
+    </div>
+</div>
+<div class="main null_shadow" id="main">
+    <header class="bg-img header">
+        <nav class="navbar navbar-default navbar-vira">
+            <div class="container">
+                <div class="navigation-bar">
+                    <div class="row">
+                        <div id="cr" class="col-xs-6">
+                            <div class="menu m">
+                                <a href="#"><span class="ion-navicon _ion-android-menu"></span></a>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <div class="logo">
+                                <img src="/icons/white_logo.svg" alt="Логотип">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="intro-box">
+                    <div class="intro">
+                        <p id="head-title">Корзина</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="ftco-section ftco-cart">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12 ftco-animate">
+                    <div class="cart-list">
+                        <table class="table">
+                            <thead class="thead-primary">
+                                <tr class="text-center">
+                                    <th>&nbsp;</th>
+                                    <th>&nbsp;</th>
+                                    <th>Десерт</th>
+                                    <th>Стоимость</th>
+                                    <th>Количество</th>
+                                    <th>Всего</th>
+                                </tr>
+                            </thead>
+                            <tbody id="goods">
+                                @foreach (var dessert in Model)
+                                {
+                                    var cost = @dessert.Количество * @dessert.ДесертNavigation.Стоимость;
+                                    <tr class="text-center">
+                                        <td class="product-remove"><p><span id="@dessert.Номер" class="ion-ios-close"></span></p></td>
+
+                                        <td class="image-prod"><div class="img" style="background-image:url(@Url.Action("GetImage", "Home", new { id = dessert.ДесертNavigation.ИзображениеNavigation.Номер }));"></div></td>
+
+                                        <td class="product-name">
+                                            <h3>@dessert.ДесертNavigation.Название</h3>
+                                            <p>@dessert.ДесертNavigation.ТипNavigation.Название</p>
+                                        </td>
+
+                                        <td class="price" id="price">@dessert.ДесертNavigation.Стоимость руб.</td>
+
+                                        @*<td class="quantity">
+                                            @dessert.Количество
+                                        </td>*@
+
+                                        <td class="quantity">
+                                            <input type="number" maxlength="2" class="form-control dessert-quantity" value="@dessert.Количество" data-dessert-id="@dessert.Номер">
+                                        </td>
+                                        
+                                        <td class="total" id="total_@dessert.Номер">@cost руб.</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="ppqq">
+                <div class="coupon">
+                    <div class="section_title">Купон</div>
+                    <div class="section_subtitle">Введите купон</div>
+                    <div class="coupon_form_container">
+                        <form action="#" id="coupon_form" class="coupon_form">
+                            <input id="couponText" type="text" class="coupon_input" required="required">
+                            <button class="button coupon_button"><span id="apply">Подтвердить</span></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="row justify-content-end">
+                    <div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
+                        <div class="cart-total mb-3">
+                            <h3>Общий чек</h3>
+                            <p class="d-flex">
+                                <span>Стоимость</span>
+                                <span id="totCost">0 руб.</span>
+                            </p>
+                            <p class="d-flex">
+                                <span>Скидка</span>
+                                <span id="sale">0 руб.</span>
+                            </p>
+                            <hr>
+                            <p class="d-flex total-price">
+                                <span>Итого</span>
+                                <span id="totCost2">0 руб.</span>
+                            </p>
+                        </div>
+                        <p class="text-center"><a id="confirm" href="Checkout" class="btn btn-primary py-3 px-4">Подтвердить заказ</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p> Создано с <span class="fa fa-heart"></span> <a href="https://www.instagram.com/desserts.koma/">Desserts.koma</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+@*<div id="demo-modal" class="modal">
+        <div class="modal__content">
+            <h1>Сообщение</h1>
+
+            <p>
+                Поздравляем! Вам предоставляется скидка в размере 5 процентов
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by Desserts.koma
+            </div>
+
+            <a href="basket.html" class="modal__close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-add" class="modal">
+        <div class="modal__content">
+            <h1>Ошибка</h1>
+
+            <p>
+                Добавьте в корзину минимум один десерт!
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="basket.html" class="modal__close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-fail" class="modal">
+        <div class="modal__content">
+            <h1>Ошибка</h1>
+
+            <p>
+                Ваш купон верный, но к сожалению, что-то пошло не так. Повторите операцию.
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="basket.html" class="modal__close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-fail2" class="modal">
+        <div class="modal__content">
+            <h1>Ошибка</h1>
+
+            <p>
+                Неверный купон
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="basket.html" class="modal__close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-fail3" class="modal">
+        <div class="modal__content">
+            <h1>Ошибка</h1>
+
+            <p>
+                Вы уже активировали купон.
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="basket.html" class="modal__close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-succ-del" class="modal">
+        <div class="modal__content">
+            <h1>Сообщение</h1>
+
+            <p>
+                Десерт успешно удален из корзины!
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="basket.html" class="modal__close">&times;</a>
+        </div>
+    </div>
+
+    <div id="demo-modal-fail-del" class="modal">
+        <div class="modal__content">
+            <h1>Ошибка</h1>
+
+            <p>
+                Что-то пошло не так! Повторите операцию.
+            </p>
+
+            <div class="modal__footer">
+                Made with <i class="fa fa-heart"></i>, by @desserts.koma
+            </div>
+
+            <a href="basket.html" class="modal__close">&times;</a>
+        </div>
+    </div>*@
+
+
+
+
+

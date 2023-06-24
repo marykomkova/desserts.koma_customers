@@ -1,0 +1,193 @@
+<title>Desserts.koma | Вход</title>
+<link rel="stylesheet" href="~/vendors/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="~/css/bootstrap.min.css">
+<link rel="stylesheet" href="~/vendors/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="~/vendors/themify-icons/themify-icons.css">
+<link rel="stylesheet" href="~/vendors/linericon/style.css">
+<link rel="stylesheet" href="~/vendors/owl-carousel/owl.theme.default.min.css">
+<link rel="stylesheet" href="~/vendors/owl-carousel/owl.carousel.min.css">
+<link rel="stylesheet" href="~/vendors/nice-select/nice-select.css">
+<link rel="stylesheet" href="~/vendors/nouislider/nouislider.min.css">
+<link rel="stylesheet" href="css/visibleOrNot.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
+<link rel="stylesheet" href="~/css/register.css">
+<link rel="stylesheet" href="~/css/style.css">
+
+<script src="~/vendors/jquery/jquery-3.2.1.min.js"></script>
+<script src="~/vendors/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="~/vendors/skrollr.min.js"></script>
+<script src="~/vendors/owl-carousel/owl.carousel.min.js"></script>
+<script src="~/vendors/nice-select/jquery.nice-select.min.js"></script>
+<script src="~/vendors/jquery.ajaxchimp.min.js"></script>
+<script src="~/vendors/mail-script.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/4.0.1/jquery.waypoints.min.js"></script>
+
+@model Пользователи
+
+<style>
+    .navigation-bar a {
+        color: #000 !important;
+    }
+
+    .menu:after {
+        color: #000 !important;
+    }
+
+    .navigation-bar {
+        border-bottom: 1px solid rgb(0 0 0 / 20%) !important;
+    }
+
+    .dark-bar {
+        background-color: #fff0fd !important;
+    }
+
+    .overl {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Прозрачный черный цвет */
+        z-index: 999; /* Определяет порядок наложения элементов */
+    }
+
+</style>
+
+<script>
+    $(document).ready(function () {
+
+        $(window).scroll(function () {
+            var scroll = $(window).scrollTop();
+
+            if (scroll >= 400) {
+                $(".navbar").addClass("navbar-fixed-top dark-bar");
+            } else {
+                $(".navbar").removeClass("navbar-fixed-top dark-bar");
+            }
+        });
+
+        // Menu bar
+        $(".menu").click(function () {
+            $(this).toggleClass('m c');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main').append('<div class="overl"></div>');
+            document.body.style.overflow = 'hidden';
+        });
+
+        $("#mySidenav .closebtn").click(function () {
+            $('.menu').toggleClass('c m');
+            $('#mySidenav').toggleClass("show-menu hide-menu");
+            $('#main .overl').remove();
+            document.body.style.overflow = 'auto';
+        });
+
+        var showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
+        var passwordInput = document.getElementById('password');
+
+        showPasswordCheckbox.addEventListener('change', function () {
+            if (showPasswordCheckbox.checked) {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        });
+    });
+</script>
+
+<div id="mySidenav" class="sidenav hide-menu">
+    <a href="javascript:void(0)" class="closebtn">×</a>
+    <a asp-area="" asp-controller="Home" asp-action="Index">Главная</a>
+    <a id="desertss" asp-area="" asp-controller="Home" asp-action="Desserts">Десерты</a>
+</div>
+<div class="main null_shadow" id="main">
+    <header class="bg-img header">
+        <nav class="navbar navbar-default navbar-vira dark-bar">
+            <div class="container">
+                <div class="navigation-bar">
+                    <div class="row">
+                        <div id="cr" class="col-xs-6">
+                            <div class="menu m">
+                                <a href="#"><span class="ion-navicon _ion-android-menu"></span></a>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <div class="logo">
+                                <img src="/icons/black_logo.svg" alt="Логотип">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="intro-box">
+                    <div class="intro">
+                        <p id="head-title">Вход / Регистрация</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="login_box_area section-margin">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="login_box_img">
+                        <div class="hover">
+                            <h4>Нет аккаунта?</h4>
+                            <p>Не откладывай возможность насладиться десертом!</p>
+                            <a class="button button-account" asp-area="" asp-controller="Home" asp-action="Register">Создать аккаунт</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="login_form_inner">
+                        <h3>Введите данные, чтобы войти</h3>
+                        <form class="row login_form" asp-controller="Home" asp-action="Login" method="post" id="contactForm">
+                            <div class="col-md-12 form-group">
+                                <input asp-for="Логин" class="form-control" id="login" placeholder="Логин">
+                                <span asp-validation-for="Логин"></span>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <div class="input-group">
+                                    <input asp-for="Пароль" type="password" class="form-control" id="password" placeholder="Пароль">
+                                    <div class="col-md-12 form-group">
+                                        <div class="creat_account">
+                                            <input type="checkbox" id="showPasswordCheckbox" name="RememberMe">
+                                            <label for="showPasswordCheckbox">Показать пароль</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Пароль"></span>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <div class="creat_account">
+                                    <input type="checkbox" id="rememberMe" name="RememberMe">
+                                    <label for="rememberMe">Запомнить меня</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12 form-group">
+                                <button id="login_button" type="submit" class="button button-login w-100">Войти</button>
+                            </div>
+                            <div asp-validation-summary="All" class="text-danger"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p> Создано с <span class="fa fa-heart"></span> <a href="https://www.instagram.com/desserts.koma/">Desserts.koma</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>

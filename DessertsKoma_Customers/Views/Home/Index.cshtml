@@ -1,0 +1,352 @@
+﻿@model IndexViewModel
+
+<title>DessertsKoma | Главная</title>
+
+<link href="/css/bootstrap.min.css" rel="stylesheet">
+<link href="/css/bootstrap-theme.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/animate.css">
+
+<link rel="stylesheet" href="/css/owl.carousel.min.css">
+<link href="/css/owl.theme.default.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/vendors/themify-icons/themify-icons.css">
+
+<link href="/css/magnific-popup.css" rel="stylesheet">
+
+<link href="/css/ionicons.min.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
+<link href="/css/cards.css" rel="stylesheet">
+
+<link rel="stylesheet" href="css/icomoon.css">
+<link rel="stylesheet" href="css/flaticon.css">
+
+<script src="~/js/jquery-3.1.1.js"></script>
+<script src="~/js/bootstrap.min.js"></script>
+<script src="~/js/owl.carousel.min.js"></script>
+<script src="https://use.fontawesome.com/55b73bf748.js"></script>
+<script src="~/js/jquery.magnific-popup.js"></script>
+<script src="~/js/jquery.waypoints.min.js"></script>
+<script src="~/js/jquery.magnific-popup.min.js"></script>
+<script src="~/js/jquery.animateNumber.min.js"></script>
+<script src="~/js/jquery.easing.1.3.js"></script>
+<script src="~/js/main.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        let isUs;
+        fetch('/Home/GetIsUser')
+            .then(response => response.text())
+            .then(data => {
+                isUs = data;
+                if (isUs == "true") {
+                    const b = document.createElement('a');
+                    b.id = "basket";
+                    b.href = "/Home/Basket";
+                    b.innerText = `Корзина`;
+                    document.getElementById(`mySidenav`).append(b);
+
+                    const b2 = document.createElement('a');
+                    b2.id = "account";
+                    b2.href = "/Home/Account";
+                    b2.innerText = `Аккаунт`;
+                    document.getElementById(`mySidenav`).append(b2);
+
+                    let isEmp = "";
+                    fetch('/Home/GetIsEmployee')
+                        .then(response => response.text())
+                        .then(data => {
+                            isEmp = data;
+                            if (isEmp == "true") {
+                                const e = document.createElement('a');
+                                e.id = "admin";
+                                e.href = "admin.html";
+                                e.innerText = `Администратор`;
+                                document.getElementById(`mySidenav`).append(e);
+                            }
+                            const v = document.createElement('div');
+                            v.classList.add("exit");
+                            v.innerHTML = `<a href="#" id="exet_acc" onclick="logout()">Выйти</a>`;
+                            document.getElementById(`mySidenav`).append(v);
+                        })
+                        .catch(error => console.error(error));
+                } else {
+                    const v = document.createElement('a');
+                    v.id = "enter";
+                    v.href = '/Home/Login';
+                    v.innerText = 'Вход';
+                    document.getElementById(`mySidenav`).append(v);
+                }
+            })
+            .catch(error => console.error(error));
+    });
+</script>
+
+<div id="mySidenav" class="sidenav hide-menu">
+    <a href="javascript:void(0)" class="closebtn">×</a>
+    <a id="desertss" asp-area="" asp-controller="Home" asp-action="Desserts">Десерты</a>
+    @*<a id="basket" href="basket.html">Корзина</a>
+        <a id="admin" href="admin.html">Администратор</a>
+        <a id="enter" asp-area="" asp-controller="Home" asp-action="Login">Вход</a>
+        <div class="exit">
+            <a href="#" id="exet_acc">Выйти</a>
+        </div>*@
+</div>
+<div class="main null_shadow" id="main">
+    <header class="bg-img header">
+        <nav class="navbar navbar-default navbar-vira">
+            <div class="container">
+                <div class="navigation-bar">
+                    <div class="row">
+                        <div id="cr" class="col-xs-6">
+                            <div class="menu m">
+                                <a href="#"><span class="ion-navicon _ion-android-menu"></span></a>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            <div class="logo">
+                                <img src="/icons/white_logo.svg" alt="Логотип">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <div class="container">
+            <div class="row">
+                <div class="intro-box">
+                    <div class="intro">
+                        <h1>Desserts.koma</h1>
+                        <p>Кондитерская, созданная со вкусом</p>
+                        <a class="btn vira-btn" href="#aboutus">Больше о нас</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <section id="about" class="about section">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+                    <h2 class="title">О нас</h2>
+                    <p>
+                        Наша основная идея - это создать кондитерский шедевр. Он может быть простым и вкусным. Мы не просто кондитерская, мы команда! Мы взяли на себя все самое сложное. Вам остается только наслаждаться и радовать окружающих.
+                    </p>
+                    <img src="/img/роспись.png">
+                    <span>Desserts.koma</span>
+                    <a name="aboutus"></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="purpose section">
+        <div class="container">
+            <h2 class="title wh">ЧЕМ МЫ ВЫДЕЛЯЕМСЯ</h2>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="vira-card">
+                        <div class="vira-card-header">
+                            <div class="card-icon">
+                                <span class="fa" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="vira-card-content">
+                            <h3 class="wh">Быстро и вкусно</h3>
+                            <p>
+                                Готовка дома занимает много сил, времени и нервов. Заказывая у нас вы освобождаете себя от лишней работы, в то время как мы готовим для вас с душой и любовью.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="vira-card">
+                        <div class="vira-card-header">
+                            <div class="card-icon">
+                                <span class="fa" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="vira-card-content">
+                            <h3 class="wh">Опыт и навыки</h3>
+                            <p>
+                                Рецепты, по которым наши кондитеры готовят для вас десерты, разрабатывались нашей командой долгое время, за которое были учтены все ошибки и предпочтения клиентов.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="vira-card">
+                        <div class="vira-card-header">
+                            <div class="card-icon">
+                                <span class="fa" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <div class="vira-card-content">
+                            <h3 class="wh">Полезно и качественно</h3>
+                            <p>
+                                Мы подбираем полезные и качественные ингредиенты для каждого десерта. Все наши составы прозрачны и мы ничего не скрываем.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="ftco-section testimony-section bg-light">
+        <div class="container">
+            <div class="row justify-content-center mb-3 pb-3">
+                <div class="col-md-12 heading-section text-center ftco-animate">
+                    <h1 class="big">Типы</h1>
+                    <h2 class="mb-4">Типы десертов</h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-8 ftco-animate">
+                    <div class="row ftco-animate">
+                        <div class="col-md-12">
+                            <div class="carousel-testimony owl-carousel ftco-owl">
+                                @foreach (var type in Model.TypesModel)
+                                {
+                                    <div class="item">
+                                        <div class="testimony-wrap py-4 pb-5">
+                                            <div class="user-img mb-4" style="background-image: url(@Url.Action("GetImage", "Home", new { id = type.ИзображениеNavigation.Номер }))">
+                                                <span class="quote d-flex align-items-center justify-content-center">
+                                                    <span class="fa" aria-hidden="true"></span>
+                                                </span>
+                                            </div>
+                                            <div class="text text-center">
+                                                <p class="mb-4">@type.Описание</p>
+                                                <p class="name">@type.Название</p>
+                                                <span class="position">(@type.ЕдиницаИзмеренияNavigation.Название)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero-banner">
+        <div class="container">
+            <div class="row no-gutters align-items-center pt-60px">
+                <div class="col-5 d-none d-sm-block">
+                    <div class="hero-banner__img">
+                        <img class="img-fluid" src="img/моти.JPG" alt="">
+                    </div>
+                    <div class="hero-banner__content">
+                        <h4>Закажи сейчас</h4>
+                        <h1>Посмотри наши лучшие десерты</h1>
+                        <p>Эти десерты купили множество раз и оставили на них прекрасные отзывы. Они нравятся большинству - с большой вероятностью и ты захочешь приобрести их не один раз.</p>
+                        <a class="button button-hero" asp-area="" asp-controller="Home" asp-action="Desserts">К десертам</a>
+                    </div>
+                </div>
+                <div class="col-sm-7 col-lg-6 offset-lg-1 pl-4 pl-md-5 pl-lg-0 hero-banner-text">
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="ftco-section bg-light">
+        <div class="container">
+            <div class="row justify-content-center mb-3 pb-3">
+                <div class="col-md-12 heading-section text-center ftco-animate">
+                    <h1 class="big">Десерты</h1>
+                    <h2 class="mb-4">Лучшие десерты</h2>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div class="row">
+
+                @foreach (var dessert in Model.DessertsModel)
+                {
+                    <div class="col-md-6 col-lg-4">
+                        <div class="card text-center card-product">
+                            <div class="card-product__img">
+                                <img class="card-img" src="@Url.Action("GetImage", "Home", new { id = dessert.ИзображениеNavigation.Номер })" width="auto" height="100%" alt="" />
+                                <ul class="card-product__imgOverlay">
+                                    <li><button data-id="@dessert.Номер" class="ic"><i class="ti-shopping-cart"></i></button></li>
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <p>@dessert.ТипNavigation.Название</p>
+                                <h4 class="card-product__title"><p data-id="dess_@dessert.Номер">@dessert.Название</p></h4>
+                                <p class="card-product__price">@dessert.Стоимость руб.</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="contact section">
+        <div class="container">
+            <h2 class="title">Всегда на связи</h2>
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class="vira-card">
+                        <div class="vira-card-header">
+                            <span class="fa fa-map-o" aria-hidden="true"></span>
+                        </div>
+                        <div class="vira-card-content">
+                            <h3>Адрес</h3>
+                            <p>
+                                Янки Мавра 64
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="vira-card">
+                        <div class="vira-card-header">
+                            <span class="fa fa-phone" aria-hidden="true"></span>
+                        </div>
+                        <div class="vira-card-content">
+                            <h3>Телефон</h3>
+                            <p>
+                                +375 29 650-50-36
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="vira-card">
+                        <div class="vira-card-header">
+                            <span class="fa fa-paper-plane" aria-hidden="true"></span>
+                        </div>
+                        <div class="vira-card-content">
+                            <h3>Email</h3>
+                            <p>
+                                marykomkova04@gmail.com
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div class="social-icons">
+                        <ul>
+                            <a href="https://www.instagram.com/desserts.koma/">
+                            <li><span class="ion-social-instagram"></span></li></a>
+                            <a href="#">
+                            <li><span class="ion-social-whatsapp"></span></li></a>
+                            <a href="#">
+                            <li><span class="ion-social-pinterest"></span></li></a>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <p> Создано с <span class="fa fa-heart"></span> <a href="https://www.instagram.com/desserts.koma/">Desserts.koma</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
