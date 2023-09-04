@@ -50,10 +50,6 @@
 <script src="~/js/jquery.easing.1.3.js"></script>
 <script src="~/js/desserts.js"></script>
 
-@{
-    var dessertsData = Model.DessertsModel;
-}
-
 <style>
     .overl {
         position: fixed;
@@ -68,7 +64,6 @@
 
 <script>
     $(document).ready(function () {
-
         $(window).scroll(function () {
             var scroll = $(window).scrollTop();
 
@@ -78,7 +73,7 @@
                 $(".navbar").removeClass("navbar-fixed-top dark-bar");
             }
         });
-
+        
         // Menu bar
         $(".menu").click(function () {
             $(this).toggleClass('m c');
@@ -196,25 +191,22 @@
             })
             .catch(error => console.error(error));
     });
-</script>
-
-<script>
-
+    
     function filterDesserts(type) {
         var cards = $('#sec .col-md-6.col-lg-4');
         if (type == "Все типы") {
             for (var i = 0; i < cards.length; i++) {
                 var card = cards[i];
-                card.style.display = 'block';
+                card.style.display = "block";
             }
         } else {
             for (var i = 0; i < cards.length; i++) {
                 var card = cards[i];
                 var cardType = $(card).find('.tip').text().trim();
                 if (cardType === type) {
-                    card.style.display = 'block';
+                    card.style.display = "block";
                 } else {
-                    card.style.display = 'none';
+                    card.style.display = "none";
                 }
             }
         }
@@ -268,10 +260,86 @@
             }
         }
 
+        $(function () {
+            $(".ic:not(.added)").off();
+            $(".ic:not(.added)").click(function (e) {
+                e.preventDefault();
+                var dessertId = $(this).data("id");
+                console.log(dessertId);
+                var self = $(this);
+                console.log(self);
+                fetch('/Home/GetIsUser')
+                    .then(response => response.text())
+                    .then(data => {
+                        isUs = data;
+                        if (isUs == "true") {
+                            $.ajax({
+                                url: "/Home/Desserts",
+                                type: "POST",
+                                data: { dessertId: dessertId },
+                                success: function () {
+                                    $(self).addClass("added");
+                                }
+                            });
+                        } else {
+                            window.location.href = "Login";
+                        }
+                    })
+                    .catch(error => console.error(error));
+            });
+        });
 
+
+        $(function () {
+            $(".card-product__title p").off();
+            $(".card-product__title p").click(function (e) {
+                e.preventDefault();
+                var dessertId = $(this).data("id");
+                var newDessertId = dessertId.substring(5);
+                window.location.href = `Dessert?id=${newDessertId}`;
+            });
+        });
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+
+        $(function () {
+            $(".ic:not(.added)").click(function (e) {
+                e.preventDefault();
+                var dessertId = $(this).data("id");
+                console.log(dessertId);
+                var self = $(this);
+                console.log(self);
+                fetch('/Home/GetIsUser')
+                    .then(response => response.text())
+                    .then(data => {
+                        isUs = data;
+                        if (isUs == "true") {
+                            $.ajax({
+                                url: "/Home/Desserts",
+                                type: "POST",
+                                data: { dessertId: dessertId },
+                                success: function () {
+                                    $(self).addClass("added");
+                                }
+                            });
+                        } else {
+                            window.location.href = "Login";
+                        }
+                    })
+                    .catch(error => console.error(error));
+            });
+        });
+
+
+        $(function () {
+            $(".card-product__title p").click(function (e) {
+                e.preventDefault();
+                var dessertId = $(this).data("id");
+                var newDessertId = dessertId.substring(5);
+                window.location.href = `Dessert?id=${newDessertId}`;
+            });
+        });
 
         $('#sort').on('change', function () {
             var value = $(this).val();
@@ -308,6 +376,46 @@
                 }
                 $(`#sec #row_${j}`).append($(items[i]).prop('outerHTML'));
             }
+
+            $(function () {
+                $(".ic:not(.added)").off();
+                $(".ic:not(.added)").click(function (e) {
+                    e.preventDefault();
+                    var dessertId = $(this).data("id");
+                    console.log(dessertId);
+                    var self = $(this);
+                    console.log(self);
+                    fetch('/Home/GetIsUser')
+                        .then(response => response.text())
+                        .then(data => {
+                            isUs = data;
+                            if (isUs == "true") {
+                                $.ajax({
+                                    url: "/Home/Desserts",
+                                    type: "POST",
+                                    data: { dessertId: dessertId },
+                                    success: function () {
+                                        $(self).addClass("added");
+                                    }
+                                });
+                            } else {
+                                window.location.href = "Login";
+                            }
+                        })
+                        .catch(error => console.error(error));
+                });
+            });
+
+
+            $(function () {
+                $(".card-product__title p").off();
+                $(".card-product__title p").click(function (e) {
+                    e.preventDefault();
+                    var dessertId = $(this).data("id");
+                    var newDessertId = dessertId.substring(5);
+                    window.location.href = `Dessert?id=${newDessertId}`;
+                });
+            });
         });
 
 
@@ -318,11 +426,51 @@
             for (var i = 0; i < cards.length; i++) {
 
                 if (value === "all" || i < +value) {
-                    cards[i].style.display = "block";
-                } else {
                     cards[i].style.display = "none";
+                } else {
+                    cards[i].style.display = "block";
                 }
             }
+
+            $(function () {
+                $(".ic:not(.added)").off();
+                $(".ic:not(.added)").click(function (e) {
+                    e.preventDefault();
+                    var dessertId = $(this).data("id");
+                    console.log(dessertId);
+                    var self = $(this);
+                    console.log(self);
+                    fetch('/Home/GetIsUser')
+                        .then(response => response.text())
+                        .then(data => {
+                            isUs = data;
+                            if (isUs == "true") {
+                                $.ajax({
+                                    url: "/Home/Desserts",
+                                    type: "POST",
+                                    data: { dessertId: dessertId },
+                                    success: function () {
+                                        $(self).addClass("added");
+                                    }
+                                });
+                            } else {
+                                window.location.href = "Login";
+                            }
+                        })
+                        .catch(error => console.error(error));
+                });
+            });
+
+
+            $(function () {
+                $(".card-product__title p").off();
+                $(".card-product__title p").click(function (e) {
+                    e.preventDefault();
+                    var dessertId = $(this).data("id");
+                    var newDessertId = dessertId.substring(5);
+                    window.location.href = `Dessert?id=${newDessertId}`;
+                });
+            });
         });
 
         var radioButtons = document.querySelectorAll('input[type="radio"]');

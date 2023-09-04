@@ -450,7 +450,7 @@
             } else if ($('#text-3a6b').val().endsWith('_') || $('#text-3a6b').val() == "") {
                 $('#err').text("Вы не ввели номер телефона!");
                 $('#err').show();
-            } else if ($('#text-7c35').is(":visible") && ($('#text-7c35').val() == "" || $('#text-8330').val() == "") || $('#text-7c35').val() == $('#text-8330').val() || $('#text-7c35').val() != $('#secr').text()) {
+            } else if ($('#text-7c35').is(":visible") && ($('#text-7c35').val() == "" || $('#text-8330').val() == "" || $('#text-7c35').val() == $('#text-8330').val() || $('#text-7c35').val() != $('#secr').text())) {
                 $('#err').text("Вы не ввели один из паролей, они совпадают или старый пароль неверный!");
                 $('#err').show();
             } else {
@@ -465,7 +465,7 @@
                         image: image,
                         name: ($('#name-66b3').val()),
                         login: $('#email-66b3').val(),
-                        password: $('#text-7c35').val(),
+                        password: $('#text-8330').val(),
                         phone: $('#text-3a6b').val()
                     },
                     success: function (data) {
@@ -545,28 +545,18 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-
-        let isEmp = "";
-        fetch('/Home/GetIsEmployee')
-            .then(response => response.text())
-            .then(data => {
-                isEmp = data;
-                if (isEmp == "true") {
-                    const e = document.createElement('a');
-                    e.id = "admin";
-                    e.href = "admin.html";
-                    e.innerText = `Администратор`;
-                    document.getElementById(`mySidenav`).append(e);
+    function logout() {
+        $.ajax({
+            url: "/Home/Logout",
+            type: "POST",
+            success: function (result) {
+                if (result) {
+                    $(".result").html(result);
+                    window.location.href = `Index`;
                 }
-                const v = document.createElement('div');
-                v.classList.add("exit");
-                v.innerHTML = `<a href="#" id="exet_acc" onclick="logout()">Выйти</a>`;
-                document.getElementById(`mySidenav`).append(v);
-            })
-            .catch(error => console.error(error));
-
-    });
+            }
+        });
+    }
 
 </script>
 
@@ -580,7 +570,7 @@
         <a href="#" id="exet_acc" onclick="logout()">Выйти</a>
     </div>
 </div>
-<div class="main null_shadow"  id="main">
+<div class="main null_shadow" id="main">
     <nav class="navbar navbar-default navbar-vira dark-bar">
         <div class="container">
             <div class="navigation-bar">
@@ -625,6 +615,21 @@
             </div>
         </div>
     </section>
+    @{
+        var cur = 0;
+        var cl = 0;
+    }
+    @for (var i = 0; i < Model.OrdersModel.Count; i++)
+    {
+        if (@Model.OrdersModel[i].СтатусNavigation.Номер < 5)
+        {
+            cur++;
+           }
+           else
+           {
+            cl++;
+           }
+        }
     <section class="u-align-center u-clearfix u-custom-color-3 u-section-2" id="carousel_81fa">
         <div class="u-clearfix u-sheet u-valign-middle u-sheet-1">
             <h2 class="u-text u-text-default u-text-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">Мои заказы</h2>
@@ -640,7 +645,7 @@
                                     </h6>
                                 </div>
                             </div>
-                            <h5 class="u-text u-text-custom-color-1 u-text-4" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500"> n заказов</h5>
+                            <h5 class="u-text u-text-custom-color-1 u-text-4" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">@cur заказов</h5>
                             <p class="srift bl u-text u-text-default u-text-5" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">Кликните на кнопку для просмотра заказов.</p>
                             <a id="cur" href="#" class="u-border-2 u-border-custom-color-1 u-btn u-btn-round u-button-style u-hover-custom-color-1 u-none u-radius-50 u-text-hover-white u-btn-1" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">просмотреть</a>
                         </div>
@@ -652,7 +657,7 @@
                                     <h6 class="u-text u-text-custom-color-2 u-text-6">закрытые</h6>
                                 </div>
                             </div>
-                            <h5 class="u-text u-text-custom-color-1 u-text-7" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500"> n заказов</h5>
+                            <h5 class="u-text u-text-custom-color-1 u-text-7" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">@cl заказов</h5>
                             <p class="srift bl u-text u-text-default u-text-8" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="0">Кликните на кнопку для просмотра заказов.</p>
                             <a id="cl" href="#" class="srift u-border-2 u-border-custom-color-1 u-btn u-btn-round u-button-style u-hover-custom-color-1 u-none u-radius-50 u-text-hover-white u-btn-2" data-animation-name="customAnimationIn" data-animation-duration="1500" data-animation-delay="500">просмотреть</a>
                         </div>

@@ -97,43 +97,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
 
     }
-
-    $(function () {
-        $(".ic:not(.added)").click(function (e) {
-            e.preventDefault();
-            var dessertId = $(this).data("id");
-            var self = $(this);
-            fetch('/Home/GetIsUser')
-                .then(response => response.text())
-                .then(data => {
-                    isUs = data;
-                    if (isUs == "true") {
-                        $.ajax({
-                            url: "/Home/Desserts",
-                            type: "POST",
-                            data: { dessertId: dessertId },
-                            success: function () {
-                                $(self).addClass("added");
-                            }
-                        });
-                    } else {
-                        window.location.href = "Login";
-                    }
-                })
-                .catch(error => console.error(error));
-        });
-    });
-
-
-    $(function () {
-        $(".card-product__title p").click(function (e) {
-            e.preventDefault();
-            var dessertId = $(this).data("id");
-            var newDessertId = dessertId.substring(5);
-            window.location.href = `Dessert?id=${newDessertId}`;
-        });
-    });
-
+    
     let isUs;
     fetch('/Home/GetIsUser')
         .then(response => response.text())
